@@ -12,4 +12,11 @@ class PasswordPolicy(private val from: Int, private val to: Int, private val cha
         return count in from..to
     }
 
+    fun performCheck2(password: String): Boolean {
+        var count = 0
+        if (password[from-1] == char) count++
+        if (password[to-1] == char) count++
+        return count == 1
+    }
+
 }
