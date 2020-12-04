@@ -23,7 +23,7 @@ fun treesCount(lines: List<String>, right: Int, down: Int): Int {
     var count = 0
     for (i in down until lines.size step down) {
         j = (j + right) % lines[0].length
-        if (lines[i][j] == '#') count++;
+        if (lines[i][j] == '#') count++
     }
     return count
 }
