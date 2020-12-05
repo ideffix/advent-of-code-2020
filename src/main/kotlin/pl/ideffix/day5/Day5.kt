@@ -5,8 +5,7 @@ import kotlin.streams.toList
 
 fun main() {
     val lines = FileUtils.readAllLines("src/main/kotlin/pl/ideffix/day5/input.txt")
-    println(findHighestId(lines))
-    //println(mapToSeat("FBFBBFFRLR"))
+    println(findYourSeatId(lines))
 }
 
 fun findHighestId(lines: List<String>): Int {
@@ -15,6 +14,21 @@ fun findHighestId(lines: List<String>): Int {
         .map(::countId)
         .toList().maxOrNull() ?: -1
 
+}
+
+fun findYourSeatId(lines: List<String>): Int? {
+    val sorted = lines.stream()
+        .map(::mapToSeat)
+        .map(::countId)
+        .sorted()
+        .toList()
+
+    for (i in 1..sorted.size) {
+        if (sorted[i] - sorted[i-1] != 1) {
+            return sorted[i] - 1
+        }
+    }
+    return null
 }
 
 fun mapToSeat(str: String): Pair<Int, Int> {
