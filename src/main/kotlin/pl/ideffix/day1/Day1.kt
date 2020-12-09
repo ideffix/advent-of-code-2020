@@ -4,7 +4,7 @@ import pl.ideffix.utils.FileUtils
 import kotlin.streams.toList
 
 fun main() {
-    val nums = FileUtils.readAllLines("src/main/kotlin/pl/ideffix/day1/input.txt").stream().map { it.toInt() }.toList()
+    val nums = FileUtils.readAllLines("src/main/kotlin/pl/ideffix/day1/input.txt").stream().map { it.toLong() }.toList()
     val pair = findSumOfTwo(nums, 2020)
     if (pair != null) {
         println(pair.first * pair.second)
@@ -15,7 +15,7 @@ fun main() {
     }
 }
 
-fun findSumOfThree(nums: List<Int>, toFind: Int): Triple<Int, Int, Int>? {
+fun findSumOfThree(nums: List<Long>, toFind: Long): Triple<Long, Long, Long>? {
     for (num in nums) {
         val pair = findSumOfTwo(nums, toFind - num)
         if (pair != null) {
@@ -25,8 +25,8 @@ fun findSumOfThree(nums: List<Int>, toFind: Int): Triple<Int, Int, Int>? {
     return null
 }
 
-fun findSumOfTwo(nums: List<Int>, toFind: Int): Pair<Int, Int>? {
-    val complements = mutableListOf<Int>()
+fun findSumOfTwo(nums: List<Long>, toFind: Long): Pair<Long, Long>? {
+    val complements = mutableListOf<Long>()
     for (num in nums) {
         if (num in complements) {
             return num to toFind - num
