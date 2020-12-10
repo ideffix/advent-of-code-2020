@@ -6,19 +6,28 @@ import kotlin.streams.toList
 fun main() {
     val nums = FileUtils.readAllLines("src/main/kotlin/pl/ideffix/day10/input.txt")
             .stream()
-            .map{it.toInt()}
+            .map{it.toLong()}
             .sorted()
             .toList()
 
-    val map = mutableMapOf(1 to 1, 3 to 1)
-    for (i in 1 until nums.size) {
-        val diff = nums[i] - nums[i-1]
-        val mapEl = map[diff]
-        if (mapEl == null) {
-            map[diff] = 1
-        } else {
-            map[diff] = mapEl + 1
+    val map = mutableMapOf<Int, Long>()
+    println(countWays(0, nums, map))
+}
+
+fun countWays(startIndex: Int, nums: List<Long>, map: MutableMap<Int, Long>): Long {
+    return when {
+        nums.size - 1 == startIndex -> 1
+        map[startIndex] != null -> map[startIndex]!!
+        else -> {
+            var count = 0L
+            var endRange = if (nums.size - 1 - startIndex > 3) 3 else  nums.size - 1 - startIndex
+            for (i in 1..endRange) {
+                if (nums[startIndex + i] - nums[startIndex] <= 3) {
+                    count += countWays(startIndex + i, nums, map)
+                }
+            }
+            map[startIndex] = count
+            count
         }
     }
-    println(map[1]!! * map[3]!!)
 }
