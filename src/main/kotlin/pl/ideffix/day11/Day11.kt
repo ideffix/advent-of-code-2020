@@ -11,7 +11,7 @@ fun main() {
 
 fun gameOfSeats(board: MutableList<String>): List<String> {
     var stateChanged = true
-    var b = mutableListOf<String>()
+    var b: MutableList<String>
     var currentBoard = board
     while(stateChanged) {
         stateChanged = false
@@ -44,10 +44,10 @@ fun canBeEmpty(board: MutableList<String>, i: Int, j: Int): Boolean {
         for (x in -1..1) {
             for (y in -1..1) {
                 if (x == 0 && y == 0) continue
-                if (board[i + x][j + y] == '#') count++
+                if (charExists(board, '#', i, j, x, y)) count++
             }
         }
-        return count >= 4
+        return count >= 5
     }
     return false
 }
@@ -57,10 +57,23 @@ fun canBeOccupied(board: MutableList<String>, i: Int, j: Int): Boolean {
         for (x in -1..1) {
             for (y in -1..1) {
                 if (x == 0 && y == 0) continue
-                if (board[i + x][j + y] == '#') return false
+                if (charExists(board, '#', i, j, x, y)) return false
             }
         }
         return true
+    }
+    return false
+}
+
+fun charExists(board: MutableList<String>, c: Char, x: Int, y:Int, dirX: Int, dirY: Int): Boolean {
+    var i = x
+    var j = y
+    while (true) {
+        i += dirX
+        j += dirY
+        if (i < 0 || j < 0 || i >= board.size || j >= board[0].length) break
+        if (board[i][j] == '.') continue
+        return board[i][j] == c
     }
     return false
 }
