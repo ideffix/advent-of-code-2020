@@ -5,7 +5,28 @@ import kotlin.streams.toList
 
 fun main() {
     val lines = FileUtils.readAllLines("src/main/kotlin/pl/ideffix/day13/input.txt")
-    println(firstTask(lines))
+    println(secondTask(lines[1]))
+}
+
+fun secondTask(input: String): Long {
+    val split = input.split(',')
+    val pairs = mutableListOf<Pair<Long, Long>>()
+    for (i in split.indices) {
+        if (split[i] == "x") continue
+        pairs.add(split[i].toLong() to i.toLong())
+    }
+
+    var increment = pairs[0].first
+    var busIndex = 1
+    var i = pairs[0].first
+    while(busIndex < pairs.size) {
+        if ((i + pairs[busIndex].second) % pairs[busIndex].first == 0L) {
+            increment *= pairs[busIndex].first;
+            busIndex++;
+        }
+        i += increment
+    }
+    return i - increment;
 }
 
 fun firstTask(lines: List<String>): Int {
