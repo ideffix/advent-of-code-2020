@@ -28,17 +28,15 @@ fun solveFirst(matrix: List<List<String>>): Int {
     return countActiveCubes(currentMatrix)
 }
 
-fun countActiveCubes(matrix: MutableList<List<String>>): Int {
-    TODO("Not yet implemented")
-}
+fun countActiveCubes(matrix: MutableList<List<String>>): Int =
+    matrix.flatten().fold(0, {acc, str -> acc + str.count { it == '#' }})
+
 
 fun checkNewLayerState(matrix: List<List<String>>, l: Int): List<String> {
     TODO("Not yet implemented")
 }
 
-fun isEmptyLayer(layer: List<String>): Boolean {
-    TODO("Not yet implemented")
-}
+fun isEmptyLayer(layer: List<String>): Boolean = layer.all {line -> line.all { it == '.' }}
 
 fun createEmptyLayer(x: Int, y: Int): List<String> {
     val l = mutableListOf<String>()
