@@ -51,12 +51,16 @@ fun findClosingBracket(split: List<String>, start: Int): Int {
 }
 
 fun solveWOBrackets(woBrackets: MutableList<String>): Long {
-    var res = woBrackets.first().toLong()
-    for (i in 2 until woBrackets.size step 2) {
-        when(woBrackets[i-1]) {
-            "*" -> res *= woBrackets[i].toLong()
-            "+" -> res += woBrackets[i].toLong()
+    val nums = mutableListOf<Long>()
+
+    var currentSum = 0L
+    for (i in 1 until woBrackets.size step 2) {
+        currentSum += woBrackets[i-1].toLong()
+        if (woBrackets[i] == "*") {
+            nums.add(currentSum)
+            currentSum = 0
         }
     }
-    return res
+    nums.add(currentSum + woBrackets.last().toLong())
+    return nums.fold(1, {acc, l -> acc * l })
 }
