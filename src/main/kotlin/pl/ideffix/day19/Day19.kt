@@ -20,11 +20,9 @@ fun main() {
             1 -> words.add(line)
         }
     }
-    val regex = Regex(createRegex(rulesMap, "0"))
-    println(regex)
     var count = 0
     for (word in words) {
-        if (word.matches(regex)) count++
+        if (isMatch(rulesMap, word, listOf(0))) count++
     }
     println(count)
 }
@@ -42,4 +40,21 @@ fun createRegex(rulesMap: Map<String, String>, ruleNr: String): String {
         l.add(regexp)
     }
     return "(${l.joinToString("|")})"
+}
+
+private fun isMatch(ruleMap: Map<String, String>, line: CharSequence, rules: List<Int>): Boolean {
+    if (line.isEmpty()) {
+        return rules.isEmpty()
+    } else if (rules.isEmpty()) {
+        return false
+    }
+    return ruleMap.getValue(rules[0].toString()).let { rule ->
+        if (rule[1] in 'a'..'z') {
+            if (line.startsWith(rule[1])) {
+                isMatch(ruleMap, line.drop(1), rules.drop(1))
+            } else false
+        } else rule.split(" | ").any {
+            isMatch(ruleMap, line, it.split(" ").map(String::toInt) + rules.drop(1))
+        }
+    }
 }
