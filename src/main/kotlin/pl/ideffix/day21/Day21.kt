@@ -5,7 +5,7 @@ import pl.ideffix.utils.FileUtils
 fun main() {
     val lines = FileUtils.readAllLines("src/main/kotlin/pl/ideffix/day21/input.txt")
     val allergens = parseInput(lines)
-    println(solveFirst(allergens))
+    println(solveSecond(allergens))
 }
 
 fun solveFirst(allergens: List<Pair<String, MutableList<MutableList<String>>>>): Int {
@@ -31,6 +31,29 @@ fun solveFirst(allergens: List<Pair<String, MutableList<MutableList<String>>>>):
     }
 
     return allergenSet.fold(0, {acc, list -> acc + list.size })
+}
+
+fun solveSecond(allergens: List<Pair<String, MutableList<MutableList<String>>>>): String {
+    var knowIngredients = mutableListOf<Pair<String, String>>()
+    var wasChange = true
+    while (wasChange) {
+        wasChange = false
+        allergens.forEach { pair ->
+            if (pair.second.isNotEmpty()) {
+                var common = pair.second.first().toSet()
+                for (i in 1 until pair.second.size) {
+                    common = common.intersect(pair.second[i])
+                }
+                if (common.size == 1) {
+                    wasChange = true
+                    knowIngredients.add(pair.first to common.first())
+                    allergens.forEach { pair -> pair.second.forEach {it.remove(common.first())} }
+                }
+            }
+        }
+    }
+
+    return knowIngredients.sortedWith { o1, o2 -> o1.first.compareTo(o2.first) }.joinToString(",") { it.second }
 }
 
 fun parseInput(lines: List<String>): List<Pair<String, MutableList<MutableList<String>>>> {
