@@ -1,12 +1,11 @@
 package pl.ideffix.day23
 
 import pl.ideffix.utils.FileUtils
-import kotlin.math.max
 
 fun main() {
     val lines = FileUtils.readAllLines("src/main/kotlin/pl/ideffix/day23/input.txt")
     val firstNode = parseInput(lines)
-    println(solveFirst(firstNode))
+    println(solveSecond(firstNode))
 }
 
 fun solveFirst(firstNode: Node): String {
@@ -16,24 +15,30 @@ fun solveFirst(firstNode: Node): String {
         current = current.next!!
     }
     var res = ""
-    var started = false
-    while (true) {
-        if (current.label == 1) {
-            started = true
-            if (res.isNotEmpty()) break
-            current = current.next!!
-            continue
-        }
-        if (started) {
-            res += current.label
-        }
+    current = Node.otherNodes[1]?.next!!
+    while (current.label != 1) {
+        res += current.label
         current = current.next!!
     }
     return res
 }
 
+fun solveSecond(firstNode: Node): Long {
+    var current = firstNode
+    for (i in 0 until 10_000_000) {
+        current.move()
+        current = current.next!!
+    }
+    val one = Node.otherNodes[1]
+    return one?.next!!.label.toLong() * one.next!!.next!!.label.toLong()
+}
+
 fun parseInput(lines: List<String>): Node {
-    val labels = lines[0].map { it.toString().toInt() }
+    val labels = lines[0].map { it.toString().toInt() }.toMutableList()
+    var i = labels.maxOrNull()!!
+    while (labels.size != 1_000_000) {
+        labels.add(++i)
+    }
     val first = Node(labels[0])
     Node.minLabel = labels.minOrNull()!!
     Node.maxLabel = labels.maxOrNull()!!
@@ -71,7 +76,7 @@ class Node(var label: Int) {
         outer@for (i in 0 until otherNodes.size) {
             if (dest < minLabel) dest = maxLabel
             var current = this.next
-            for (i in 1..3) {
+            for (j in 1..3) {
                 if (current?.label == dest) {
                     dest--
                     continue@outer
