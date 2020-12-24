@@ -16,7 +16,42 @@ fun main() {
     val dirsList = parseInput(lines)
     val blacks = solveFirst(dirsList)
     println(blacks.size)
+    println(solveSecond(blacks))
 }
+
+fun solveSecond(blacks: Set<Pair<Int, Int>>): Int {
+    var startDay = blacks.toMutableSet()
+    for (i in 0 until 100) {
+        var endDay = mutableSetOf<Pair<Int, Int>>()
+        for (point in startDay) {
+            val blackNeighbours = countBlackNeighbours(point, startDay)
+            endDay.addAll(checkWhiteNeighbours(point, startDay))
+            if (blackNeighbours == 0 || blackNeighbours > 2) continue
+            endDay.add(point)
+        }
+        println("Day ${i + 1} ${endDay.size}")
+        startDay = endDay
+    }
+    return startDay.size
+}
+
+fun checkWhiteNeighbours(point: Pair<Int, Int>, startDay: MutableSet<Pair<Int, Int>>): Collection<Pair<Int, Int>> {
+    val blacks = mutableSetOf<Pair<Int, Int>>()
+    for (dir in dirsMove.values) {
+        val p = point.first + dir.first to point.second + dir.second
+        if (startDay.contains(p)) continue
+        val blackCount = countBlackNeighbours(p, startDay)
+        if (blackCount == 2) blacks.add(p)
+    }
+    return blacks
+}
+
+fun countBlackNeighbours(point: Pair<Int, Int>, startDay: MutableSet<Pair<Int, Int>>): Int =
+   dirsMove.values.fold(0, {acc, dir ->
+       val p = point.first + dir.first to point.second + dir.second
+       if (startDay.contains(p)) acc + 1 else acc
+   } )
+
 
 fun solveFirst(dirsList: List<List<String>>): Set<Pair<Int, Int>> {
     val blacks = mutableSetOf<Pair<Int, Int>>()
